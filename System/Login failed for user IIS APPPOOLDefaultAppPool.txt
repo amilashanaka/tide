@@ -1,0 +1,7 @@
+
+
+
+Open IIS
+now open "Application Pool"
+Now you have to select “DefaultAppPool” and click on option “Advance Settings”.
+Now open drop down Application Pool Identity and select "Local System" 
