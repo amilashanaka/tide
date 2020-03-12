@@ -16,10 +16,8 @@ int buzz = 2;
 int numberofReadings =15;
 int averageDistance =0;
 const int chipSelect = 4;
-int y=0;
 char loc[]="1003";
 int i =0;
-int x=0;
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 byte ip[] = { 10, 60, 4, 113};
 byte server[] = {10, 10, 1,225}; // Server IP
@@ -32,7 +30,6 @@ void(* resetFunc) (void) = 0;
 const int kCePin   = 3;  // Chip Enable
 const int kIoPin   = 5;  // Input/Output
 const int kSclkPin = 6;  // Serial Clock
-int rdlog[50];
 DS1302 rtc(kCePin, kIoPin, kSclkPin);
 String  printTime();
 void cardSetup();
@@ -59,28 +56,16 @@ void setup() {
      //Time t(2016, 3, 1, 10,06 , 0, t.day);
      // rtc.time(t);
      averageDistance=0;
-     x=0;
      for(int j=0;j<numberofReadings;j++){
           getDistance();
-          rdlog[j]=distance;
-           
-          y=abs(rdlog[j]-rdlog[j-1]);
-          Serial.println(y);
-          if(y<2 )
-          {
           averageDistance = averageDistance+distance;
-           x++;
-          }
-          else{
-            Serial.println("Not add");
-          }
           delay(3000);
      }
     lcd.clear();
     lcd.setCursor(1, 0);
     lcd.print(timeOnly());
     delay(1000);
-    averageDistance=averageDistance/x;
+    averageDistance=averageDistance/numberofReadings;
     Serial.println(" Avarage Distence:");
     Serial.println(averageDistance);
     lcd.clear();
@@ -90,7 +75,7 @@ void setup() {
     lcd.print( averageDistance,10);
      lcd.print("Cm");
     delay(2000);
-     
+    delay(247000); 
     Serial.println("connecting...");
     if (client.connect(server, 80)) 
     {
@@ -142,7 +127,6 @@ void loop() {
                     Serial.println();
                     Serial.println("disconnecting.");
                     client.stop();
-                     delay(240000);
                     setup();
                   }
               
@@ -266,12 +250,7 @@ void getDistance(){
       resetFunc();  //call reset
     }
      else {
-     distance=110-distance;
-     
-     if(distance>200 || distance<0)
-     {
-       setup();
-     }
+      distance=110-distance;
       Serial.print(" ");
       Serial.println(distance);
       lcd.clear();
